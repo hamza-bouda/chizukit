@@ -1,0 +1,584 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Détails du Produit{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    .product-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 20px;
+    }
+
+    .product-thumbnails {
+        display: flex;
+        flex-direction: column;
+        margin-right: 20px;
+    }
+
+    .product-thumbnails img {
+        width: 70px;
+        height: auto;
+        margin-bottom: 10px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.3s ease;
+    }
+
+    .product-thumbnails img.selected,
+    .product-thumbnails img:hover {
+        border-color: #e67e22;
+    }
+
+    .product-main-image {
+        flex: 1;
+        margin-right: 20px;
+    }
+
+    .product-main-image img {
+        width: 100%;
+        max-width: 600px;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .product-main-image img:hover {
+        transform: scale(1.05);
+    }
+
+    .product-details {
+        flex: 2;
+        max-width: 800px;
+    }
+
+    .product-details h1 {
+        font-size: 28px;
+        margin-top: 0;
+        color: #333;
+    }
+
+    .product-details p {
+        margin: 10px 0;
+        color: #666;
+    }
+
+    .product-details .price {
+        font-size: 28px;
+        color: #e67e22;
+        margin-bottom: 20px;
+    }
+
+    .product-details .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: white;
+        text-align: center;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        border-radius: 5px;
+        font-size: 1.1em;
+    }
+
+    .product-details .btn:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+    }
+
+    .product-details ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .product-details ul li {
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+    }
+
+    .product-details ul li strong {
+        margin-right: 10px;
+    }
+
+    .product-details ul li i {
+        margin-right: 10px;
+        color: #e67e22;
+    }
+
+    .related-products {
+        margin-top: 50px;
+    }
+
+    .related-products h2 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .related-products .product-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin: 10px;
+        cursor: pointer;
+        height: 300px;
+    }
+
+    .related-products .product-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .related-products .product-card:hover img {
+        transform: scale(1.05);
+    }
+
+    .related-products .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .related-products .product-card .card-body {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .related-products .product-card .card-title {
+        font-size: 1em;
+        margin-bottom: 10px;
+    }
+
+    .related-products .product-card .card-text {
+        margin-bottom: 10px;
+        color: #e67e22;
+        font-size: 1.2em;
+    }
+
+    .out-of-stock {
+        color: red;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+
+    .quick-pay, .why-us {
+        width: 100%;
+        text-align: center;
+        margin: 20px 0;
+        font-size: 1.1em;
+    }
+    
+    .quick-pay img {
+        width: 90px;
+        margin: 0 10px;
+        display: inline-block;
+    }
+    
+    .quick-pay h2, .why-us h2 {
+        margin-bottom: 10px;
+        font-size: 1.5em;
+    }
+    
+    .why-us ul {
+        list-style: none;
+        padding: 0;
+        display: inline-block;
+        text-align: left;
+    }
+    
+    .why-us ul li {
+        margin-bottom: 10px;
+        font-size: 1.1em;
+        position: relative;
+        padding-left: 25px;
+    }
+    
+    .why-us ul li::before {
+        content: '•';
+        color: purple;
+        font-size: 1.5em;
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+    
+    .reviews {
+        margin-top: 50px;
+    }
+    
+    .reviews h2 {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .highlight {
+        background-color: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+    
+    .review {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 10px;
+        width: 100%;
+        max-width: 300px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .review:hover {
+        transform: translateY(-5px);
+    }
+
+    .review-profile {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    .review-profile img {
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+    }
+    
+    .review-profile h5 {
+        margin: 10px 0 0;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+    .review p {
+        font-size: 1em;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .review-rating {
+        color: #e67e22;
+        margin-top: 10px;
+    }
+    
+    .add-review {
+        text-align: center;
+        margin-top: 30px;
+    }
+    
+    .add-review form {
+        max-width: 600px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .add-review textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+
+    .add-review button {
+        background-color: #3498db;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .add-review button:hover {
+        background-color: #2980b9;
+    }
+
+    .login-prompt {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .login-prompt a {
+        color: #3498db;
+        text-decoration: underline;
+    }
+
+    .star-rating {
+        direction: rtl;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
+
+    .star-rating input {
+        display: none;
+    }
+
+    .star-rating label {
+        font-size: 2em;
+        color: #ddd;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+    .star-rating input:checked ~ label {
+        color: #ffc700;
+    }
+
+    .star-rating input:checked ~ label ~ label {
+        color: #ddd;
+    }
+
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: #ffc700;
+    }
+
+    .customer-review {
+        background: #f7f7f7;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 10px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 300px;
+        transition: transform 0.3s ease;
+    }
+
+    .customer-review img {
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+        margin-bottom: 20px;
+    }
+
+    .customer-review p {
+        font-size: 1em;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .customer-review h5 {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .customer-review .review-rating {
+        font-size: 1.1em;
+        color: #e67e22;
+    }
+</style>
+<script>
+    function changeMainImage(src, element) {
+        document.getElementById('main-image').src = src;
+        var thumbnails = document.querySelectorAll('.product-thumbnails img');
+        thumbnails.forEach(function(thumbnail) {
+            thumbnail.classList.remove('selected');
+        });
+        element.classList.add('selected');
+    }
+
+    function redirectToProduct(productId) {
+        window.location.href = `/product/${productId}/`;
+    }
+
+    async function addReview(event) {
+        event.preventDefault();
+        const form = document.getElementById('review-form');
+        const formData = new FormData(form);
+        const productId = {{ product.id }};
+        
+        try {
+            const response = await fetch(`/product/${productId}/`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            });
+            const data = await response.json();
+            if (data.error) {
+                alert(data.error);
+            } else {
+                const reviewsContainer = document.getElementById('reviews-container');
+                const newReview = `
+                    <div class="customer-review">
+                        <img src="https://static.vecteezy.com/ti/vecteur-libre/p1/20765399-defaut-profil-compte-inconnue-icone-noir-silhouette-gratuit-vectoriel.jpg" alt="Profile Picture">
+                        <p>${data.comment}</p>
+                        <h5>${data.user}</h5>
+                        <div class="review-rating">
+                            ${[...Array(5)].map((_, i) => i < data.rating ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>').join('')}
+                        </div>
+                    </div>
+                `;
+                reviewsContainer.insertAdjacentHTML('beforeend', newReview);
+                form.reset();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    async function addToCart(productId) {
+        try {
+            const response = await fetch("{% url 'add_to_cart' 0 %}".replace(0, productId), {
+                method: 'GET',
+            });
+            const data = await response.text();
+            document.getElementById('cart-content').innerHTML = data;
+            openNav();
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    function openNav() {
+        document.getElementById("mySidenav").style.width = "450px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="product-container">
+    <div class="product-thumbnails">
+        <img src="{{ product.main_image.url }}" alt="Image principale du produit" class="selected" onclick="changeMainImage('{{ product.main_image.url }}', this)">
+        {% for image in product.images.all %}
+        <img src="{{ image.image.url }}" alt="Image du produit" onclick="changeMainImage('{{ image.image.url }}', this)">
+        {% endfor %}
+    </div>
+    <div class="product-main-image">
+        <img id="main-image" src="{{ product.main_image.url }}" alt="Image principale du produit">
+    </div>
+    <div class="product-details">
+        <h1>{{ product.name }}</h1>
+        <p class="price">{{ product.price }} €</p>
+        <p>{{ product.description }}</p>
+        <ul>
+            <li><strong>Category :</strong> {{ product.category }}</li>
+            <li><strong>Brand :</strong> {{ product.brand }}</li>
+            <li><strong>Sponsor :</strong> {{ product.sponsor }}</li>
+            <li><strong>Size :</strong> {{ product.size }}</li>
+            <li><strong>Flockings :</strong> {{ product.customization }}</li>
+            <li><strong>Sleeve Type :</strong> {{ product.sleeve_type }}</li>
+            <li><strong>Seasons :</strong> {{ product.seasons }}</li>
+            <li><strong>Quality:</strong> {{ product.quality_rating }}</li>
+        </ul>
+        {% if product.is_sold %}
+        <div class="out-of-stock">Out of Stock</div>
+        {% else %}
+        <button onclick="addToCart({{ product.id }})" class="btn">Ajouter au panier</button>
+        {% endif %}
+    </div>
+</div>
+
+<div class="quick-pay">
+    <h2>Quick Pay Available at the Checkout</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal">
+</div>
+
+<div class="why-us">
+    <h2>Why Always Us?</h2>
+    <p>Since 2013, football shirts have been our obsession.</p>
+    <ul>
+        <li>FAST WORLDWIDE SHIPPING</li>
+        <li>RELIABLE CUSTOMER SERVICE</li>
+        <li>ONLY OFFICIAL JERSEYS</li>
+    </ul>
+</div>
+
+<div class="reviews">
+    <h2>Customer's <span class="highlight">Review</span></h2>
+    <div id="reviews-container" class="d-flex flex-wrap justify-content-center">
+        {% if not reviews %}
+        <div class="alert alert-info w-100 text-center" role="alert">
+            No reviews yet.
+        </div>
+        {% else %}
+        {% for review in reviews %}
+        <div class="customer-review">
+            <img src="https://static.vecteezy.com/ti/vecteur-libre/p1/20765399-defaut-profil-compte-inconnue-icone-noir-silhouette-gratuit-vectoriel.jpg" alt="Profile Picture">
+            <p>{{ review.comment }}</p>
+            <h5>{{ review.user.username }}</h5>
+            <div class="review-rating">
+                {% for i in rating_range %}
+                    {% if i <= review.rating %}
+                        <i class="fas fa-star"></i>
+                    {% else %}
+                        <i class="far fa-star"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+{% if user.is_authenticated and not user.is_superuser %}
+<div class="add-review">
+    <h2>Add a review</h2>
+    <form id="review-form" onsubmit="addReview(event)">
+        {% csrf_token %}
+        <textarea name="comment" rows="4" placeholder="Write your review here..." required></textarea>
+        <div class="star-rating">
+            <input type="radio" name="rating" id="5-stars" value="5" required>
+            <label for="5-stars">&#9733;</label>
+            <input type="radio" name="rating" id="4-stars" value="4">
+            <label for="4-stars">&#9733;</label>
+            <input type="radio" name="rating" id="3-stars" value="3">
+            <label for="3-stars">&#9733;</label>
+            <input type="radio" name="rating" id="2-stars" value="2">
+            <label for="2-stars">&#9733;</label>
+            <input type="radio" name="rating" id="1-star" value="1">
+            <label for="1-star">&#9733;</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+</div>
+{% else %}
+<div class="alert alert-warning" role="alert">
+    You need to <a href="{% url 'account' %}" class="alert-link">log in</a> to leave a review.
+</div>
+{% endif %}
+
+<div class="related-products">
+    <h2>Vous aimerez aussi</h2>
+    <div class="row">
+        {% for related_product in related_products %}
+        <div class="col-md-3">
+            <div class="product-card" onclick="redirectToProduct({{ related_product.id }})">
+                <img src="{{ related_product.main_image.url }}" alt="{{ related_product.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ related_product.name }}</h5>
+                    <p class="card-text">{{ related_product.price }} €</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

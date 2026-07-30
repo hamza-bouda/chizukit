@@ -1,0 +1,128 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Tous nos Maillots - Chizukit{% endblock %}
+
+{% block extra_head %}
+<style>
+    .product-card {
+        position: relative;
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        min-height: 400px; /* Fixe une hauteur minimale pour toutes les cartes */
+        width: 100%;
+    }
+    .product-card:hover {
+        transform: translateY(-10px);
+    }
+    .product-card img {
+        max-width: 100%;
+        height: auto;
+        max-height: 300px; /* Fixe une hauteur maximale pour les images */
+        object-fit: cover;
+    }
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        flex-grow: 1;
+    }
+    .badge-custom {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 5px 10px;
+        font-size: 0.8em;
+    }
+    .badge-new {
+        background-color: green;
+        color: white;
+    }
+    .badge-iconic {
+        background-color: orange;
+        color: white.
+    }
+    .badge-sold {
+        background-color: red;
+        color: white;
+    }
+    .card-title {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+    .card-title a {
+        text-decoration: none; /* Enlève la soulignement du lien */
+        color: inherit; /* Garde la couleur du texte */
+    }
+    .card-title a:hover {
+        text-decoration: none; /* Enlève la soulignement du lien au survol */
+        color: inherit; /* Garde la couleur du texte */
+    }
+    .card-text {
+        margin-bottom: 20px;
+    }
+    .btn-secondary {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+    }
+    .btn-secondary:hover {
+        background-color: #45a049;
+        border-color: #45a049;
+    }
+    .row > .col-md-4 {
+        padding-bottom: 30px; /* Ajoute de l'espace entre les lignes de produits */
+    }
+    .out-of-stock {
+        color: red;
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+<main>
+    <section class="products">
+        <div class="container">
+            <h2 class="text-center my-4">Tous nos Maillots</h2>
+            <div class="row">
+                {% for product in products %}
+                <div class="col-md-4 d-flex align-items-stretch">
+                    <div class="product-card card">
+                        {% if product.is_new %}
+                        <div class="badge badge-custom badge-new">NEW</div>
+                        {% endif %}
+                        {% if product.is_iconic %}
+                        <div class="badge badge-custom badge-iconic">ICONIC</div>
+                        {% endif %}
+                        {% if product.is_sold %}
+                        <div class="badge badge-custom badge-sold">SOLD</div>
+                        {% endif %}
+                        <a href="{% url 'product_detail' product.id %}">
+                            <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="card-img-top">
+                        </a>
+                        <div class="card-body text-center">
+                            <h5 class="card-title">
+                                <a href="{% url 'product_detail' product.id %}" style="text-decoration: none; color: inherit;">{{ product.name }}</a>
+                            </h5>
+                            <p class="card-text">{{ product.price }} DH</p>
+                            {% if product.is_sold %}
+                            <div class="out-of-stock">Out of Stock</div>
+                            {% else %}
+                            <button data-product-id="{{ product.id }}" class="btn btn-secondary add-to-cart">Ajouter au panier</button>                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

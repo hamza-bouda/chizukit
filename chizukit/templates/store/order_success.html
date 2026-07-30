@@ -1,0 +1,60 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Commande Réussie - Chizukit{% endblock %}
+
+{% block extra_head %}
+<style>
+    .success-message {
+        margin-top: 50px;
+        margin-bottom: 50px;
+        text-align: center;
+        min-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: #f8f8f8;
+        border: 1px solid #e7e7e7;
+        border-radius: 8px;
+        padding: 40px;
+    }
+    .success-message h2 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        color: #333;
+    }
+    .success-message p {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+        color: #666;
+    }
+    .btn-home {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+        padding: 10px ;
+        font-size: 25px;
+        border-radius: 18px;
+        text-decoration: none;
+    }
+    .btn-home:hover {
+        background-color: #45a049;
+        border-color: #45a049;
+    }
+    .check-icon {
+        font-size: 3em;
+        color: #4CAF50;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container success-message animate__animated animate__fadeInUp">
+        <i class="fas fa-check-circle check-icon animate__animated animate__bounceIn"></i>
+        <h2 class="animate__animated animate__fadeInUp">Merci pour votre commande !</h2>
+        <p class="animate__animated animate__fadeInUp">Votre commande a été passée avec succès. Nous vous enverrons votre colis bientôt.</p>
+        <a href="{% url 'all_jerseys' %}" class="btn btn-home animate__animated animate__fadeInUp">Retour à la boutique</a>
+    </div>
+</main>
+{% endblock %}

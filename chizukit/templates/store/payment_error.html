@@ -1,0 +1,13 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Erreur de Paiement - Chizukit{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container">
+        <h2 class="text-center">Erreur lors du paiement</h2>
+        <p class="text-center">Une erreur est survenue lors du traitement de votre paiement. Veuillez réessayer.</p>
+        <pre>{{ error }}</pre>
+    </div>
+</main>
+{% endblock %}

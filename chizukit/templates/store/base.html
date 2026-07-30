@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Chizukit{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        .navbar-custom {
+            background-color: black;
+            border-bottom: 1px solid #ddd;
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: bold;
+            color: white;
+        }
+        .navbar-custom .nav-link {
+            color: white;
+            font-weight: bold;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #007bff;
+        }
+        .navbar-custom .search-bar {
+            width: 300px;
+            position: relative;
+        }
+        .navbar-custom .search-bar input {
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            width: 100%;
+        }
+        .navbar-custom .search-bar button {
+            background: none;
+            border: none;
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            color: #333;
+        }
+        .navbar-custom .search-bar button:hover {
+            color: #007bff;
+        }
+        .navbar-brand img {
+            height: 50px;
+            margin-right: 10px;
+        }
+        footer {
+            background-color: black;
+            color: white;
+            padding: 20px 0;
+        }
+        footer h4 {
+            margin-bottom: 20px;
+        }
+        footer a {
+            color: white;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .imagefoot {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .imagefoot img {
+            width: 150px;
+            height: auto;
+            display: inline-block;
+        }
+        .footer-section {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .footer-section ul {
+            padding-left: 0;
+            list-style: none;
+        }
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            right: 0;
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            box-shadow: -4px 0 6px -1px rgba(0,0,0,.1);
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+            color: #343a40;
+        }
+
+        .sidenav .cart-header {
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidenav .cart-header h2 {
+            margin: 0;
+            color: #343a40;
+        }
+
+        .sidenav .cart-items {
+            padding: 20px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .sidenav .cart-item {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidenav .cart-item img {
+            max-width: 80px;
+            margin-right: 20px;
+        }
+
+        .sidenav .cart-item-info {
+            flex-grow: 1;
+            margin-right: 20px;
+        }
+
+        .sidenav .cart-item-info h5 {
+            font-size: 1rem;
+            margin: 0;
+            color: #343a40;
+        }
+
+        .sidenav .cart-item-info p {
+            font-size: 0.9rem;
+            margin: 0;
+            color: #6c757d;
+        }
+
+        .sidenav .cart-item-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .sidenav .cart-item-actions .btn-remove {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .sidenav .cart-item-actions .btn-remove:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        .sidenav .cart-total {
+            padding: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .sidenav .cart-total h4 {
+            margin: 0 0 10px 0;
+            color: #343a40;
+        }
+
+        .sidenav .cart-total .btn-block {
+            width: 100%;
+        }
+        
+        /* Added styles for the mobile menu button */
+        .navbar-custom .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-custom .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+
+        .navbar-custom .navbar-toggler:hover,
+        .navbar-custom .navbar-toggler:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Ensure sidenav takes full width on mobile */
+        @media (max-width: 768px) {
+            .sidenav {
+                width: 100%;
+                right: 0;
+                left: 0;
+            }
+            .sidenav .closebtn {
+                right: 25px;
+            }
+        }
+
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container">
+                <a class="navbar-brand" href="{% url 'all_jerseys' %}">
+                    <img src="/media/logo.png" alt="Logo"> Chizukit
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'all_jerseys' %}">Our Jerseys</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'icon_jerseys' %}">Icon Jerseys</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'new_jerseys' %}">New Jerseys</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cart' %}">
+                                <i class="fas fa-shopping-cart"></i>
+                                (<span id="cart-item-count">{% if cart_item_count %}{{ cart_item_count }}{% else %}0{% endif %}</span>)
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                        {% if user.is_authenticated %}
+                            <a class="nav-link" href="{% url 'user_logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        {% else %}
+                            <a class="nav-link" href="{% url 'account' %}"><i class="fas fa-user"></i> My Account</a>
+                        {% endif %}                        </li>
+                    </ul>
+                    <form class="form-inline search-bar ml-auto" action="{% url 'search_jerseys' %}" method="get">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="q">
+                        <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <div id="cart-content">
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 footer-section">
+                    <h4>Informations</h4>
+                    <ul>
+                        <li><a href="https://wa.me/+212681622979">Contactez-nous</a></li>
+                        <li><a href="#">Notre Histoire</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 text-center footer-section">
+                    <div class="imagefoot">
+                        <img src="/media/logo.png" alt="Logo">
+                    </div>
+                </div>
+                <div class="col-md-3 footer-section">
+                    <h4>Réseaux Sociaux</h4>
+                    <ul>
+                        <li><a href="https://www.instagram.com/chizou.kit?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">Instagram</a></li>
+                        <li><a href="https://wa.me/+212681622979">WhatsApp</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center py-3">
+                <p>&copy; 2024 Chizukit. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "450px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+        function handleClick(event) {
+            var productId = this.getAttribute('data-product-id');
+            console.log('Button clicked:', this); // Log the button
+            addToCart(productId);
+        }
+        function updateCartItemCount() {
+            var cartItems = document.querySelectorAll('.cart-item');
+            document.getElementById("cart-item-count").textContent = cartItems.length;
+        }
+        function addToCart(productId) {
+            fetch("{% url 'add_to_cart' 0 %}".replace(0, productId), {
+                method: "GET"
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("cart-content").innerHTML = data;
+                openNav();
+                updateCartItemCount();
+                reassignAddToCartEvents();
+                // Optional: Restore button styles immediately after adding to cart
+                var button = document.querySelector('[data-product-id="'+ productId +'"]');
+                button.style.backgroundColor = ''; // Reset background color
+                button.style.color = ''; // Reset text color
+                button.classList.remove('active'); // Remove any active class
+                button.disabled = false; // Ensure the button is not disabled
+            })
+            .catch(error => console.log(error));
+        }
+        
+        function reassignAddToCartEvents() {
+            var buttons = document.querySelectorAll('.add-to-cart');
+            buttons.forEach(function(button) {
+                button.removeEventListener('click', handleClick);
+                button.addEventListener('click', handleClick);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            reassignAddToCartEvents();
+        });
+        
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

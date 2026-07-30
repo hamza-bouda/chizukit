@@ -1,0 +1,89 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Mon Panier - Chizukit{% endblock %}
+
+{% block extra_head %}
+<style>
+    .cart-container {
+        margin-top: 30px;
+        min-height: 60vh;  /* Pour pousser le pied de page vers le bas */
+    }
+    .cart-header {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+    .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .cart-item img {
+        max-width: 100px;
+        margin-right: 20px;
+    }
+    .cart-item-info {
+        flex-grow: 1;
+    }
+    .cart-item-actions {
+        display: flex;
+        align-items: center;
+    }
+    .cart-total {
+        font-size: 1.2em;
+        margin-top: 20px;
+    }
+    .btn-checkout {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        font-size: 1.2em;
+        margin-top: 20px;
+    }
+    .btn-checkout:hover {
+        background-color: #45a049;
+        border-color: #45a049;
+    }
+    .btn-remove {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        font-size: 0.9em;
+        margin-left: 10px;
+    }
+    .btn-remove:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container cart-container">
+        <h2 class="cart-header">Mon Panier</h2>
+        {% if items %}
+            {% for item in items %}
+            <div class="cart-item">
+                <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}">
+                <div class="cart-item-info">
+                    <h5>{{ item.product.name }}</h5>
+                </div>
+                <div class="cart-item-actions">
+                    <p>{{ item.product.price }} DH</p>
+                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-remove">Supprimer</a>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="cart-total">
+                <strong>Total: {{ total }} DH</strong>
+            </div>
+            <a href="{% url 'place_order' %}" class="btn btn-checkout">Passer à la commande</a>
+        {% else %}
+            <p>Votre panier est vide. <a href="{% url 'all_jerseys' %}">Retourner à la boutique</a></p>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

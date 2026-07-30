@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Méthodes de Paiement - Chizukit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .text-center {
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-primary {
+            background-color: #007bff;
+        }
+        .btn-paypal {
+            background-color: #ffc439;
+            color: #003087;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        .btn-paypal:hover {
+            background-color: #ffb119;
+        }
+        .btn-paypal img {
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .payment-options h2 {
+            margin-bottom: 30px;
+        }
+        .order-summary {
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .order-summary h4 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-decoration: underline;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .order-summary img {
+            max-width: 100px;
+            margin-right: 20px;
+        }
+        .order-summary .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .order-summary .order-item:last-child {
+            border-bottom: none;
+        }
+        .order-summary .order-item h5 {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .order-summary .order-item p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+        .order-summary .total-section {
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        .order-summary .shipping-info {
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .order-total h5, .order-total h4 {
+            margin: 10px 0;
+        }
+        .order-total h5 {
+            font-size: 1rem;
+        }
+        .order-total h4 {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .btn-submit {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            width: auto;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .btn-submit:hover {
+            background-color: #45a049;
+            border-color: #45a049;
+        }
+        .payment-methods {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+        }
+        .payment-methods label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .payment-methods input[type="radio"] {
+            margin-right: 10px;
+        }
+        .form-check-label {
+            margin-left: 5px;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+        }
+        header img {
+            height: 50px;
+        }
+        header a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        header a:hover {
+            text-decoration: underline;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input[type="text"], .form-group input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        .loader-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            display: none;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+        #bank-transfer-details {
+            display: 100%;
+        }
+        .error-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <img src="/media/logo.png" alt="Classic Football Shirts">
+    <a href="{% url 'place_order' %}">← BACK</a>
+</header>
+<div class="overlay"></div>
+<div class="loader-container">
+    <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
+<main>
+    <div class="container payment-options">
+        <h2 class="text-center">Sélectionnez une Méthode de Paiement</h2>
+        <form id="payment-form" method="post" action="{% url 'process_payment' order.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="payment-methods">
+                <label>
+                    <input type="radio" name="payment_method" value="cod" checked>
+                    <i class="fas fa-truck"></i> Cash on Delivery
+                </label>
+                <label>
+                    <input type="radio" name="payment_method" value="paypal">
+                    <i class="fab fa-paypal"></i> PayPal
+                </label>
+            </div>
+
+            {% if error_message %}
+                <p class="error-message">{{ error_message }}</p>
+            {% endif %}
+
+            <div id="bank-transfer-details">
+                <div class="form-group">
+                    <label for="bankTransferImage">Téléchargez l'image de votre preuve de virement</label>
+                    <input type="file" class="form-control-file" id="bankTransferImage" name="bank_transfer_image" accept="image/*">
+                </div>
+                <p>Veuillez effectuer un virement de 20% du montant total de votre commande à ce RIB : <strong>1234567890</strong></p>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-submit" id="place-order-btn">PLACE ORDER</button>
+                <div id="paypal-button-container" style="display: none;">
+                    <a href="{% url 'create_payment' order.id %}" class="btn-paypal" id="paypal-btn">
+                        <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_150x38.png" alt="PayPal">
+                        Payer avec PayPal
+                    </a>
+                </div>
+            </div>
+        </form>
+        <div class="order-summary">
+            <h4 id="order-summary-toggle">
+                Order Summary <span id="toggle-icon">-</span>
+            </h4>
+            <div id="order-summary-content">
+                {% for item in cart_items %}
+                <div class="order-item">
+                    <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}">
+                    <div>
+                        <h5>{{ item.product.name }}</h5>
+                        <p>{{ item.product.size }}</p>
+                        <p>{{ item.product.price|floatformat:2 }} DH</p>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="shipping-info">
+                    <h5>Subtotal: {{ total_amount|floatformat:2 }} DH</h5>
+                    <h5>Shipping & Handling: {{ shipping|floatformat:2 }} DH</h5>
+                    <h5>Tax: {{ tax|floatformat:2 }} DH</h5>
+                </div>
+                <div class="order-total total-section">
+                    <h4>Grand Total: {{ grand_total|floatformat:2 }} DH</h4>
+                </div>
+                <div class="shipping-info">
+                    <h5>Ship To</h5>
+                    <p>{{ order.full_name }}</p>
+                    <p>{{ order.address }}</p>
+                    <p>{{ order.city }} - {{ order.postal_code }}</p>
+                    <p>{{ order.country }}</p>
+                    <p>T: {{ order.telephone }}</p>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="sameAsShipping" checked>
+                    <label class="form-check-label" for="sameAsShipping">
+                        My billing and shipping address are the same
+                    </label>
+                </div>
+                <div id="billing-address-form" style="display: none;">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_street_address">Street Address</label>
+                            <input type="text" name="street_address" id="id_street_address" class="form-control" value="{{ order.address }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_country">Country</label>
+                            <input type="text" name="country" id="id_country" class="form-control" value="{{ order.country }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_state">State/Province</label>
+                            <input type="text" name="state" id="id_state" class="form-control" value="{{ order.state }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_postal_code">Zip/Postal Code</label>
+                            <input type="text" name="postal_code" id="id_postal_code" class="form-control" value="{{ order.postal_code }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_city">City</label>
+                            <input type="text" name="city" id="id_city" class="form-control" value="{{ order.city }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_telephone">Telephone</label>
+                            <input type="text" name="telephone" id="id_telephone" class="form-control" value="{{ order.telephone }}" required>
+                        </div>
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-submit">Save Address</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#order-summary-toggle').on('click', function () {
+            var content = $('#order-summary-content');
+            var icon = $('#toggle-icon');
+            content.toggle();
+            icon.text(content.is(':visible') ? '-' : '+');
+        });
+
+        $('#sameAsShipping').on('change', function () {
+            var billingForm = $('#billing-address-form');
+            billingForm.toggle(!this.checked);
+        });
+
+        $('input[name="payment_method"]').on('change', function () {
+            var paypalContainer = $('#paypal-button-container');
+            var placeOrderBtn = $('#place-order-btn');
+            var bankTransferDetails = $('#bank-transfer-details');
+            if (this.value === 'paypal') {
+                paypalContainer.show();
+                placeOrderBtn.hide();
+                bankTransferDetails.hide();
+            } else if (this.value === 'cod') {
+                paypalContainer.hide();
+                placeOrderBtn.show();
+                bankTransferDetails.show();
+            } else {
+                paypalContainer.hide();
+                placeOrderBtn.show();
+                bankTransferDetails.hide();
+            }
+        });
+
+        $('#place-order-btn').on('click', function (e) {
+            var paymentMethod = $('input[name="payment_method"]:checked').val();
+            if (paymentMethod === 'cod' && !$('#bankTransferImage').val()) {
+                e.preventDefault();
+                $('#bank-transfer-details').append('<p class="error-message">Veuillez télécharger une preuve de virement.</p>');
+            } else {
+                $('.overlay').show();
+                $('.loader-container').show();
+            }
+        });
+
+        $('#paypal-btn').on('click', function () {
+            $('.overlay').show();
+            $('.loader-container').show();
+        });
+
+        window.addEventListener('pageshow', function(event) {
+            var loaderContainer = $('.loader-container');
+            loaderContainer.hide();
+            if (event.persisted) {
+                $('.overlay').hide();
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Passer la Commande - Chizukit{% endblock %}
+
+{% block extra_head %}
+<style>
+    .order-form-container {
+        margin-top: 30px;
+    }
+    .order-form-container form {
+        max-width: 600px;
+        margin: auto;
+    }
+    .order-form-container form .form-group {
+        margin-bottom: 20px;
+    }
+    .order-form-container label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .order-form-container input[type="text"], 
+    .order-form-container input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .btn-submit {
+        background-color: #4CAF50;
+        border-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        font-size: 1.2em;
+        width: 100%;
+        border-radius: 5px;
+        margin-top: 20px;
+    }
+    .btn-submit:hover {
+        background-color: #45a049;
+        border-color: #45a049;
+    }
+    .order-summary {
+        padding: 20px;
+        margin-top: 30px;
+    }
+    .order-summary h4 {
+        margin-bottom: 20px;
+        font-size: 1.2rem;
+        text-decoration: underline;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+    .order-summary img {
+        max-width: 100px;
+        margin-right: 20px;
+    }
+    .order-summary .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+    }
+    .order-summary .order-item:last-child {
+        border-bottom: none;
+    }
+    .order-summary .order-item h5 {
+        margin: 0;
+        font-size: 1rem;
+    }
+    .order-summary .order-item p {
+        margin: 0;
+        font-size: 0.9rem;
+    }
+    .order-summary .total-section {
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
+    }
+    .order-summary .shipping-info {
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    .order-total h5, .order-total h4 {
+        margin: 10px 0;
+    }
+    .order-total h5 {
+        font-size: 1rem;
+    }
+    .order-total h4 {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container order-form-container">
+        <h2 class="text-center">Passer la Commande</h2>
+        <div class="row">
+            <div class="col-md-7">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_email">Email address</label>
+                        <input type="email" name="email" id="id_email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_first_name">First Name</label>
+                        <input type="text" name="first_name" id="id_first_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_last_name">Last Name</label>
+                        <input type="text" name="last_name" id="id_last_name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_telephone">Telephone</label>
+                        <input type="text" name="telephone" id="id_telephone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_address_search">Address search</label>
+                        <input type="text" name="address_search" id="id_address_search" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_street_address">Street Address</label>
+                        <input type="text" name="street_address" id="id_street_address" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_country">Country</label>
+                        <input type="text" name="country" id="id_country" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_state">State/Province</label>
+                        <input type="text" name="state" id="id_state" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_postal_code">Zip/Postal Code</label>
+                        <input type="text" name="postal_code" id="id_postal_code" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_city">City</label>
+                        <input type="text" name="city" id="id_city" class="form-control" required>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-submit">Confirmer la Commande</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-5">
+                <div class="order-summary">
+                    <h4 id="order-summary-toggle">
+                        Order Summary
+                        <span id="toggle-icon">+</span>
+                    </h4>
+                    <div id="order-summary-content" style="display: none;">
+                        {% for item in cart_items %}
+                        <div class="order-item">
+                            <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}">
+                            <div>
+                                <h5>{{ item.product.name }}</h5>
+                                <p>{{ item.product.size }}</p>
+                            </div>
+                            <div>
+                                <p>{{ item.product.price|floatformat:2 }} DH</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <div class="shipping-info">
+                            <h5>Subtotal: {{ total_amount|floatformat:2 }} DH</h5>
+                            <h5>Shipping & Handling: {{ shipping|floatformat:2 }} DH</h5>
+                            <h5>Tax: {{ tax|floatformat:2 }} DH</h5>
+                        </div>
+                        <div class="order-total total-section">
+                            <h4>Grand Total: {{ grand_total|floatformat:2 }} DH</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('order-summary-toggle').addEventListener('click', function () {
+        var content = document.getElementById('order-summary-content');
+        var icon = document.getElementById('toggle-icon');
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            icon.textContent = '-';
+        } else {
+            content.style.display = 'none';
+            icon.textContent = '+';
+        }
+    });
+</script>
+{% endblock %}
